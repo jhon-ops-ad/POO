@@ -8,7 +8,6 @@ public class CursoPresencial extends Curso {
         this.salaDeAula = salaDeAula;
     }
 
-    // Sobrescrita do método para Polimorfismo (Fase 4)
     @Override
     public String detalharCurso() {
         return super.detalharCurso() + " | Modalidade: Presencial | Sala: " + salaDeAula;

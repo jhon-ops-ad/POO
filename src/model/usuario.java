@@ -1,6 +1,5 @@
 package model;
 
-// Classe Abstrata para generalizar atributos comuns (Fase 5)
 public abstract class Usuario {
     protected String nome;
 

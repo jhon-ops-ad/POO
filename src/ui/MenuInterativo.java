@@ -1,6 +1,13 @@
 package ui;
 
-import model.*;
+// Importações explícitas para evitar conflitos
+import model.Administrador;
+import model.Aluno;
+import model.Curso;
+import model.CursoEAD;
+import model.CursoPresencial;
+import model.Professor;
+import model.Turma;
 import repository.RepositorioGlobal;
 import service.GestaoAcademicaService;
 
@@ -12,7 +19,6 @@ public class MenuInterativo {
     private final RepositorioGlobal repo = RepositorioGlobal.getInstance();
     private final GestaoAcademicaService service = new GestaoAcademicaService();
     private final Scanner scanner = new Scanner(System.in);
-    // Instância do Administrador para Autenticação (Fase 5)
     private final Administrador administrador = new Administrador("Admin Principal", "ADM001");
 
     public void iniciar() {
@@ -20,13 +26,12 @@ public class MenuInterativo {
         System.out.println("  BEM-VINDO AO SGE EDUCONNECT - PROTÓTIPO");
         System.out.println("=========================================");
 
-        // Simulação de autenticação inicial para entrar no menu principal (Fase 5)
         if (autenticarAdmin()) {
             menuPrincipal();
         } else {
             System.out.println("Autenticação falhou. Encerrando o sistema.");
         }
-        scanner.close(); // Fecha o Scanner ao sair
+        scanner.close();
     }
 
     private boolean autenticarAdmin() {
@@ -50,7 +55,7 @@ public class MenuInterativo {
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
             opcao = lerInteiro();
-            scanner.nextLine(); // Consumir nova linha
+            scanner.nextLine(); 
 
             switch (opcao) {
                 case 1 -> menuCadastro();
@@ -99,9 +104,9 @@ public class MenuInterativo {
         if (curso != null) {
             Aluno aluno = new Aluno(nome, matricula, curso);
             repo.adicionarAluno(aluno);
-            System.out.println("✅ Aluno " + nome + " cadastrado com sucesso no curso de " + curso.getNome() + ".");
+            System.out.println("Aluno " + nome + " cadastrado com sucesso no curso de " + curso.getNome() + ".");
         } else {
-            System.out.println("❌ Erro: Curso com código " + codCurso + " não encontrado. Cadastre o curso primeiro.");
+            System.out.println("Erro: Curso com código " + codCurso + " não encontrado. Cadastre o curso primeiro.");
         }
     }
 
@@ -116,7 +121,7 @@ public class MenuInterativo {
 
         Professor professor = new Professor(nome, especialidade, registro);
         repo.adicionarProfessor(professor);
-        System.out.println("✅ Professor " + nome + " cadastrado com registro " + registro + ".");
+        System.out.println("Professor " + nome + " cadastrado com registro " + registro + ".");
     }
 
     private void cadastrarCurso() {
@@ -148,7 +153,7 @@ public class MenuInterativo {
         }
 
         repo.adicionarCurso(curso);
-        System.out.println("✅ Curso " + nome + " (" + curso.detalharCurso() + ") cadastrado com sucesso.");
+        System.out.println("Curso " + nome + " cadastrado com sucesso.");
     }
 
     private void menuTurmas() {
@@ -178,6 +183,11 @@ public class MenuInterativo {
         System.out.print("Código da Turma (Ex: T01): ");
         String codTurma = scanner.nextLine();
 
+        if (repo.buscarTurmaPorCodigo(codTurma) != null) {
+            System.out.println("Erro: Turma com este código já existe.");
+            return;
+        }
+
         System.out.print("Código do Curso (Ex: INF101): ");
         String codCurso = scanner.nextLine();
         Curso curso = repo.buscarCursoPorCodigo(codCurso);
@@ -186,17 +196,12 @@ public class MenuInterativo {
         String regProf = scanner.nextLine();
         Professor professor = repo.buscarProfessorPorRegistro(regProf);
 
-        if (repo.buscarTurmaPorCodigo(codTurma) != null) {
-            System.out.println("❌ Erro: Turma com este código já existe.");
-            return;
-        }
-
         if (curso != null && professor != null) {
             Turma turma = new Turma(codTurma, professor, curso);
             repo.adicionarTurma(turma);
-            System.out.println("✅ Turma " + codTurma + " criada com sucesso (Professor: " + professor.getNome() + ", Curso: " + curso.getNome() + ").");
+            System.out.println("Turma " + codTurma + " criada com sucesso.");
         } else {
-            System.out.println("❌ Erro: Curso ou Professor não encontrados.");
+            System.out.println("Erro: Curso ou Professor não encontrados.");
         }
     }
 
@@ -212,10 +217,10 @@ public class MenuInterativo {
 
         if (aluno != null && turma != null) {
             if (turma.adicionarAluno(aluno)) {
-                System.out.println("✅ Aluno " + aluno.getNome() + " associado à Turma " + turma.getCodigo() + " com sucesso.");
+                System.out.println("Aluno " + aluno.getNome() + " associado à Turma " + turma.getCodigo() + " com sucesso.");
             }
         } else {
-            System.out.println("❌ Erro: Aluno ou Turma não encontrados.");
+            System.out.println("Erro: Aluno ou Turma não encontrados.");
         }
     }
 
@@ -228,7 +233,7 @@ public class MenuInterativo {
         if (turma != null) {
             service.gerarRelatorioTurma(turma);
         } else {
-            System.out.println("❌ Erro: Turma não encontrada.");
+            System.out.println("Erro: Turma não encontrada.");
         }
     }
 
@@ -239,7 +244,7 @@ public class MenuInterativo {
         Turma turma = repo.buscarTurmaPorCodigo(codTurma);
 
         if (turma == null) {
-            System.out.println("❌ Erro: Turma não encontrada.");
+            System.out.println("Erro: Turma não encontrada.");
             return;
         }
 
@@ -248,7 +253,7 @@ public class MenuInterativo {
         Aluno aluno = repo.buscarAlunoPorMatricula(matricula);
 
         if (aluno == null || !turma.getListaAlunos().contains(aluno)) {
-            System.out.println("❌ Erro: Aluno não encontrado ou não matriculado nesta turma.");
+            System.out.println("Erro: Aluno não encontrado ou não matriculado nesta turma.");
             return;
         }
 
@@ -258,7 +263,6 @@ public class MenuInterativo {
         double nota = lerDouble();
         scanner.nextLine();
 
-        // Usa o serviço para aplicar a regra de negócio (Fase 3 - Encapsulamento)
         service.registrarNota(turma, aluno, descricao, nota);
     }
 
@@ -284,7 +288,6 @@ public class MenuInterativo {
         } while (opcao != 0);
     }
 
-    // Método genérico para gerar relatórios (Polimorfismo - Fase 6)
     private void gerarRelatorioGeral(List<?> lista) {
         if (lista.isEmpty()) {
             System.out.println("Não há dados cadastrados para gerar este relatório.");
@@ -296,35 +299,32 @@ public class MenuInterativo {
         System.out.println("==================================");
 
         for (Object item : lista) {
-            // Uso de Pattern Matching for instanceof (Java 16+)
-            if (item instanceof Aluno aluno) {
-                System.out.println(aluno.gerarRelatorio());
-            } else if (item instanceof Professor professor) {
-                System.out.println(professor.gerarRelatorio());
-            } else if (item instanceof Curso curso) {
-                System.out.println(curso.gerarRelatorio());
+            // Correção: Uso de casting explícito compatível com Java 8+
+            if (item instanceof Aluno) {
+                System.out.println(((Aluno) item).gerarRelatorio());
+            } else if (item instanceof Professor) {
+                System.out.println(((Professor) item).gerarRelatorio());
+            } else if (item instanceof Curso) {
+                System.out.println(((Curso) item).gerarRelatorio());
             }
         }
     }
 
-    // Funções auxiliares para leitura segura
     private int lerInteiro() {
         while (!scanner.hasNextInt()) {
-            System.out.println("Entrada inválida. Por favor, digite um número inteiro.");
-            scanner.next(); // descarta a entrada inválida
+            System.out.println("Entrada inválida. Digite um número inteiro.");
+            scanner.next(); 
             System.out.print("Tente novamente: ");
         }
-        int valor = scanner.nextInt();
-        return valor;
+        return scanner.nextInt();
     }
 
     private double lerDouble() {
         while (!scanner.hasNextDouble()) {
-            System.out.println("Entrada inválida. Por favor, digite um número decimal (use ponto).");
-            scanner.next(); // descarta a entrada inválida
+            System.out.println("Entrada inválida. Digite um número decimal (use ponto ou vírgula conforme sistema).");
+            scanner.next(); 
             System.out.print("Tente novamente: ");
         }
-        double valor = scanner.nextDouble();
-        return valor;
+        return scanner.nextDouble();
     }
 }

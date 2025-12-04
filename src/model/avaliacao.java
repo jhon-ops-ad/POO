@@ -1,17 +1,16 @@
 package model;
 
 public class Avaliacao {
-    private double nota; // Atributo privado para Encapsulamento (Fase 3)
+    private double nota;
     private String descricao;
-    private Aluno aluno; // Associação com Aluno
+    private Aluno aluno;
 
     public Avaliacao(String descricao, Aluno aluno) {
         this.descricao = descricao;
         this.aluno = aluno;
-        this.nota = 0.0; // Inicializa com nota zero
+        this.nota = 0.0;
     }
 
-    // Método para controle e validação de nota (Encapsulamento - Fase 3)
     public boolean atribuirNota(double valor) {
         if (valor >= 0.0 && valor <= 10.0) {
             this.nota = valor;
@@ -21,7 +20,6 @@ public class Avaliacao {
         return false;
     }
 
-    // Getters
     public double getNota() {
         return nota;
     }
@@ -34,6 +32,7 @@ public class Avaliacao {
         return aluno;
     }
 
+    @Override
     public String toString() {
         return "Avaliação: " + descricao + " | Aluno: " + aluno.getNome() + " | Nota: " + nota;
     }

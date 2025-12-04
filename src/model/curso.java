@@ -1,6 +1,5 @@
 package model;
 
-// Classe base para Herança (Fase 4)
 public class Curso {
     protected String nome;
     protected String codigo;
@@ -12,7 +11,6 @@ public class Curso {
         this.cargaHoraria = cargaHoraria;
     }
 
-    // Getters
     public String getNome() {
         return nome;
     }
@@ -25,12 +23,10 @@ public class Curso {
         return cargaHoraria;
     }
 
-    // Método para ser Sobrescrito (Polimorfismo - Fase 4)
     public String detalharCurso() {
         return "Curso: " + nome + " | Código: " + codigo + " | Carga Horária: " + cargaHoraria + "h";
     }
 
-    // Método polimórfico de Relatório (Fase 6)
     public String gerarRelatorio() {
         return "\n--- Relatório do Curso ---\n" +
                detalharCurso() +
